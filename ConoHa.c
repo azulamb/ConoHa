@@ -2,8 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <signal.h>
 
-#define VERSION "0.3"
+#define VERSION "1.0"
 #define WIDTH 24
 
 char CONOHA[][ WIDTH ] =
@@ -26,10 +27,44 @@ char CONOHA[][ WIDTH ] =
 	"        []  []/'       ",
 "\n"};
 
-char WORDS[][ 58 ] =
+unsigned char WORDS[][ 58 ] =
 {
 	"清楚かわいいConoHaだよ～！！",
 "\n"};
+
+int ByteUTF8Char( const unsigned char *str )
+{
+	if ( (*str >> 1) == 0x7E ) { return 6; }
+	if ( (*str >> 2) == 0x3E ) { return 5; }
+	if ( (*str >> 3) == 0x1E ) { return 4; }
+	if ( (*str >> 4) == 0xE ) { return 3; }
+	if ( (*str >> 5) == 0x6 ) { return 2; }
+	return 1;
+}
+
+int LengthUTF8String( const unsigned char *str )
+{
+	int length = 0;
+	int byte = 0;
+
+	while ( str[ byte ] != '\0' )
+	{
+		byte += ByteUTF8Char( str + byte );
+		++length;
+	}
+
+	return length;
+}
+
+int ByteUTF8String( const unsigned char *str, int num )
+{
+	int byte = 0;
+	while ( 0 < num-- )
+	{
+		byte += ByteUTF8Char( str + byte );
+	}
+	return byte;
+}
 
 int ConoHaType()
 {
@@ -38,7 +73,7 @@ int ConoHaType()
 
 int ConoHaLast( int type )
 {
-	return strlen( WORDS[ type ] ) / 3;
+	return LengthUTF8String( WORDS[ type ] );
 }
 
 int ConoHaDraw( int type, int frame, int vline )
@@ -51,7 +86,7 @@ int ConoHaDraw( int type, int frame, int vline )
 		printf( "%s", CONOHA[ line++ ] );
 		if ( line == vline )
 		{
-			sprintf( format, "%c.%ds", '%', frame * 3 );
+			sprintf( format, "%c.%ds", '%', ByteUTF8String( WORDS[ type ], frame ) );
 			printf( format, WORDS[ type ] );
 		}
 		printf( "\n" );
@@ -100,6 +135,18 @@ void HelpCmd()
 	exit( 0 );
 }
 
+void GoodByeSignal( int signal )
+{
+}
+
+void RegistrationSignal()
+{
+	//signal( SIGHUP, GoodByeSignal );
+	signal( SIGINT, GoodByeSignal );
+	//signal( SIGKILL, GoodByeSignal );
+	//signal( SIGTERM, GoodByeSignal );
+}
+
 int main( int argc, char **argv )
 {
 	int num = 1;
@@ -119,6 +166,7 @@ int main( int argc, char **argv )
 		++num;
 	}
 
+	RegistrationSignal();
 	ConoHaCmd();
 
 	return 0;
