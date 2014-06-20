@@ -47,9 +47,8 @@ $ ConoHa
 
 ## 今後の予定は？
 
-* Ctrl+Cなどに対する抵抗力をつける。
 * configureとか用意する。
-* ConoHaにセリフを喋らせる。
+* ConoHaのセリフを増やす。
 * ConoHaのAAを可愛くする。
 
 ## AAは誰が描いたの？
