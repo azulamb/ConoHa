@@ -3,7 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 
-#define VERSION "0.1"
+#define VERSION "0.3"
 #define WIDTH 24
 
 char CONOHA[][ WIDTH ] =
@@ -26,6 +26,11 @@ char CONOHA[][ WIDTH ] =
 	"        []  []/'       ",
 "\n"};
 
+char WORDS[][ 58 ] =
+{
+	"清楚かわいいConoHaだよ～！！",
+"\n"};
+
 int ConoHaType()
 {
 	return 0;
@@ -33,16 +38,22 @@ int ConoHaType()
 
 int ConoHaLast( int type )
 {
-	return 2;
+	return strlen( WORDS[ type ] ) / 3;
 }
 
-int ConoHaDraw( int type, int frame )
+int ConoHaDraw( int type, int frame, int vline )
 {
+	char format[ 16 ];
 	int line = 0;
 
 	while ( CONOHA[ line ][ 0 ] != '\n' )
 	{
 		printf( "%s", CONOHA[ line++ ] );
+		if ( line == vline )
+		{
+			sprintf( format, "%c.%ds", '%', frame * 3 );
+			printf( format, WORDS[ type ] );
+		}
 		printf( "\n" );
 	}
 	return line;
@@ -50,7 +61,7 @@ int ConoHaDraw( int type, int frame )
 
 void ConoHaCmd()
 {
-	int line;
+	int line = 2;
 	int type;
 	int frame = 0;
 	int last;
@@ -60,7 +71,7 @@ void ConoHaCmd()
 
 	while( '-' )
 	{
-		line = ConoHaDraw( type, frame );
+		line = ConoHaDraw( type, frame, line / 2 - 1 );
 		if ( last <= ++frame ) { break; }
 		sleep( 1 );
 		printf( "\033[%dA", line ); // Linux only?
@@ -70,7 +81,7 @@ void ConoHaCmd()
 void VersionCmd()
 {
 	printf( "ConoHa cmd ver %s.\n", VERSION );
-	ConoHaDraw( 0, 0 );
+	ConoHaDraw( 0, 0, 0 );
 	exit( 0 );
 }
 
