@@ -31,6 +31,11 @@ char WORDS[][ 58 ] =
 	"清楚かわいいConoHaだよ～！！",
 "\n"};
 
+int CountUTF8String( const char str )
+{
+
+}
+
 int ConoHaType()
 {
 	return 0;
