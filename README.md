@@ -32,6 +32,8 @@ LinuxとGCCがあればコンパイルできるはず。
 
 CentOS6(64bit)のgcc(gcc version 4.4.7 20120313 (Red Hat 4.4.7-4) (GCC))にてコンパイルを確認しました。
 
+後、日本語を表示する関係上、UTF-8を使うようにしてください。
+
 ``` Terminal
 $ make
 # make install
@@ -45,9 +47,8 @@ $ ConoHa
 
 ## 今後の予定は？
 
-* Ctrl+Cなどに対する抵抗力をつける。
 * configureとか用意する。
-* ConoHaにセリフを喋らせる。
+* ConoHaのセリフを増やす。
 * ConoHaのAAを可愛くする。
 
 ## AAは誰が描いたの？
